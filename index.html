@@ -30,10 +30,11 @@
 </nav>
 
 <header class="hero">
-  <div class="orb"></div>
+  <div class="orb-webgl" data-hue="119" data-intensity="0.25" aria-hidden="true"></div>
+  <canvas class="particles" aria-hidden="true"></canvas>
   <div class="wrap">
-    <div class="kicker">Premium tech accessories</div>
-    <h1>Power your <span class="grad">everyday</span> devices</h1>
+    <div class="kicker shiny">Premium tech accessories</div>
+    <h1>Power your <span class="grad shiny">everyday</span> devices</h1>
     <p>Chargers, cables, power banks and audio gear engineered for real life — tested to last, priced fairly, shipped worldwide.</p>
     <div class="hero-actions">
       <a class="cta" href="index.html#products">Shop bestsellers</a>
@@ -50,7 +51,7 @@
       <p>Every product is drop-tested, heat-tested and charge-cycled before it earns the VOLTMORE name.</p>
     </div>
     <div class="grid-3">
-      <div class="product">
+      <div class="product tilt">
         <div class="photo"><img src="img/charger.jpg" alt="VoltCore 65W GaN Charger"></div>
         <div class="body">
           <h3>VoltCore 65W GaN Charger</h3>
@@ -58,7 +59,7 @@
           <div class="price"><b>$39.90</b><a class="btn-sm" href="contact.html">Order</a></div>
         </div>
       </div>
-      <div class="product">
+      <div class="product tilt">
         <div class="photo"><img src="img/powerbank.jpg" alt="VoltBank 20K Power Bank"></div>
         <div class="body">
           <h3>VoltBank 20K Power Bank</h3>
@@ -66,7 +67,7 @@
           <div class="price"><b>$49.90</b><a class="btn-sm" href="contact.html">Order</a></div>
         </div>
       </div>
-      <div class="product">
+      <div class="product tilt">
         <div class="photo"><img src="img/cable.jpg" alt="VoltCord 100W USB-C Cable"></div>
         <div class="body">
           <h3>VoltCord 100W USB-C Cable</h3>
@@ -74,7 +75,7 @@
           <div class="price"><b>$19.90</b><a class="btn-sm" href="contact.html">Order</a></div>
         </div>
       </div>
-      <div class="product">
+      <div class="product tilt">
         <div class="photo"><img src="img/earbuds.jpg" alt="VoltBuds ANC Earbuds"></div>
         <div class="body">
           <h3>VoltBuds ANC Earbuds</h3>
@@ -82,7 +83,7 @@
           <div class="price"><b>$79.90</b><a class="btn-sm" href="contact.html">Order</a></div>
         </div>
       </div>
-      <div class="product">
+      <div class="product tilt">
         <div class="photo"><img src="img/phonecase.jpg" alt="VoltCase MagSafe Phone Case"></div>
         <div class="body">
           <h3>VoltCase MagSafe Phone Case</h3>
@@ -90,7 +91,7 @@
           <div class="price"><b>$24.90</b><a class="btn-sm" href="contact.html">Order</a></div>
         </div>
       </div>
-      <div class="product">
+      <div class="product tilt">
         <div class="photo"><img src="img/dock.jpg" alt="VoltStand 3-in-1 Charging Dock"></div>
         <div class="body">
           <h3>VoltStand 3-in-1 Charging Dock</h3>
@@ -123,10 +124,10 @@
 <section style="padding-top:64px">
   <div class="wrap">
     <div class="stats">
-      <div class="stat"><div class="v">24 mo</div><p>warranty on every product</p></div>
-      <div class="stat"><div class="v">30k</div><p>bend cycles, cables survive</p></div>
-      <div class="stat"><div class="v">98%</div><p>5-star rating this year</p></div>
-      <div class="stat"><div class="v">30 d</div><p>easy returns, no questions</p></div>
+      <div class="stat reveal"><div class="v"><span class="count" data-count="24">0</span> mo</div><p>warranty on every product</p></div>
+      <div class="stat reveal"><div class="v"><span class="count" data-count="30">0</span>k</div><p>bend cycles, cables survive</p></div>
+      <div class="stat reveal"><div class="v"><span class="count" data-count="98">0</span>%</div><p>5-star rating this year</p></div>
+      <div class="stat reveal"><div class="v"><span class="count" data-count="30">0</span> d</div><p>easy returns, no questions</p></div>
     </div>
   </div>
 </section>
@@ -201,6 +202,80 @@
   </div>
 </footer>
 
+<script src="orb.js"></script>
+<script>
+(function () {
+  'use strict';
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  if (!reduced && window.matchMedia('(hover: hover) and (pointer: fine)').matches) {
+    document.querySelectorAll('.tilt').forEach(function (card) {
+      var raf = null;
+      card.addEventListener('mousemove', function (ev) {
+        if (raf) return;
+        raf = requestAnimationFrame(function () {
+          raf = null;
+          var r = card.getBoundingClientRect();
+          var px = (ev.clientX - r.left) / r.width - 0.5;
+          var py = (ev.clientY - r.top) / r.height - 0.5;
+          card.style.transform = 'perspective(900px) rotateX(' + (-py * 6).toFixed(2) + 'deg) rotateY(' + (px * 8).toFixed(2) + 'deg) translateY(-4px)';
+        });
+      }, { passive: true });
+      card.addEventListener('mouseleave', function () { card.style.transform = ''; });
+    });
+  }
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (e) {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        if (e.target.classList.contains('count')) {
+          io.unobserve(e.target);
+          var el = e.target, target = Number(el.dataset.count), t0 = null;
+          function step(ts) {
+            if (!t0) t0 = ts;
+            var p = Math.min((ts - t0) / 1400, 1);
+            var eased = 1 - Math.pow(2, -10 * p);
+            el.textContent = Math.round(target * eased);
+            if (p < 1) requestAnimationFrame(step);
+          }
+          requestAnimationFrame(step);
+        } else {
+          io.unobserve(e.target);
+        }
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal, .count').forEach(function (el) { io.observe(el); });
+
+  var canvas = document.querySelector('.particles');
+  if (canvas && !reduced) {
+    var ctx = canvas.getContext('2d');
+    var W, H, ps = [];
+    function resize() {
+      W = canvas.width = window.innerWidth;
+      H = canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+    for (var i = 0; i < 46; i++) {
+      ps.push({ x: Math.random() * W, y: Math.random() * H, r: 0.6 + Math.random() * 1.6, s: 0.05 + Math.random() * 0.16, o: 0.15 + Math.random() * 0.4 });
+    }
+    (function tick() {
+      ctx.clearRect(0, 0, W, H);
+      ps.forEach(function (p) {
+        p.y -= p.s;
+        if (p.y < -4) { p.y = H + 4; p.x = Math.random() * W; }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(120,255,90,' + p.o + ')';
+        ctx.fill();
+      });
+      requestAnimationFrame(tick);
+    })();
+  }
+})();
+</script>
 <script>
   var io = new IntersectionObserver(function (entries) {
     entries.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });

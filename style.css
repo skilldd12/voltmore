@@ -88,6 +88,55 @@ nav {
   .orb, .orb::after { animation: none; }
 }
 
+/* ══ WebGL Orb（ReactBits shader 移植）══ */
+.orb-webgl {
+  position: absolute; width: 520px; height: 520px;
+  right: 6%; top: 16%; z-index: 1;
+}
+.orb-webgl canvas { border-radius: 50%; }
+.particles {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 1;
+}
+.hero .wrap { z-index: 3; }
+
+/* ══ 流光文字（ReactBits ShinyText）══ */
+.shiny {
+  background: linear-gradient(110deg, rgba(255,255,255,.7) 30%, #8dff68 46%, #fff 52%, rgba(255,255,255,.7) 70%);
+  background-size: 220% 100%;
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+  animation: voltShine 5s linear infinite;
+}
+.kicker.shiny { color: transparent; }
+@keyframes voltShine { 0% { background-position: 120% 0; } 100% { background-position: -100% 0; } }
+
+/* ══ 产品卡 3D 倾斜 + 反光 ══ */
+.product { transform-style: preserve-3d; transition: transform .2s cubic-bezier(.16,1,.3,1), border-color .2s, box-shadow .2s; }
+.product .photo { position: relative; overflow: hidden; }
+.product .photo::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(115deg, transparent 35%, rgba(255,255,255,.18) 50%, transparent 65%);
+  transform: translateX(-120%);
+  transition: transform .8s cubic-bezier(.16,1,.3,1);
+}
+.product:hover .photo::after { transform: translateX(120%); }
+.product .photo img { transition: transform .7s cubic-bezier(.16,1,.3,1); }
+.product:hover .photo img { transform: scale(1.06); }
+
+/* ══ 滚动显现 ══ */
+.reveal { opacity: 0; transform: translateY(22px); transition: opacity .7s cubic-bezier(.16,1,.3,1), transform .7s cubic-bezier(.16,1,.3,1); }
+.reveal.in { opacity: 1; transform: none; }
+.stat .v { font-variant-numeric: tabular-nums; }
+
+@media (max-width: 960px) {
+  .orb-webgl { width: 300px; height: 300px; right: 4%; top: 12%; opacity: .75; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .shiny { animation: none; }
+  .reveal { opacity: 1; transform: none; transition: none; }
+}
+
 section { padding: 92px 0; }
 .sec-head { max-width: 680px; margin-bottom: 44px; }
 .sec-head h2 { font-size: clamp(26px, 3.4vw, 40px); letter-spacing: -.03em; line-height: 1.12; margin-bottom: 12px; }
