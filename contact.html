@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact — VOLTMORE</title>
+<meta name="description" content="Contact VOLTMORE: order help, product questions and warranty support.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'><rect width='64' height='64' rx='14' fill='%230b0e11'/><path d='M36 8 16 36h14l-4 20 22-30H32z' fill='%2335c7f0'/></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="index.html">
+    <svg width="26" height="26" viewBox="0 0 64 64" fill="none"><rect width="64" height="64" rx="14" fill="#0b0e11"/><path d="M36 8 16 36h14l-4 20 22-30H32z" fill="#35c7f0"/></svg>
+    VOLTMORE
+  </a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="index.html#products">Products</a>
+    <a href="index.html#why">Why us</a>
+    <a href="contact.html" class="active">Contact</a>
+    <a class="cta nav-cta" href="mailto:2096243628@qq.com">Email us</a>
+  </div>
+</nav>
+
+<header class="page-hero">
+  <div class="wrap">
+    <div class="kicker">Contact</div>
+    <h1>We reply within 24 hours</h1>
+    <p>Order help, product questions, warranty claims. Tell us what you need and we will sort it out.</p>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <form class="form" onsubmit="return sendMail(event)">
+      <label>Your name <input type="text" id="n" required placeholder="Name"></label>
+      <label>Your email <input type="email" id="e" required placeholder="you@example.com"></label>
+      <label>Topic
+        <select id="t" style="background:#0e1318;border:1px solid var(--line);border-radius:12px;color:var(--text);font:inherit;font-size:14px;padding:12px 14px">
+          <option>Order help</option>
+          <option>Product question</option>
+          <option>Warranty</option>
+          <option>Wholesale / bulk</option>
+          <option>Something else</option>
+        </select>
+      </label>
+      <label>Message <textarea id="m" required placeholder="How can we help?"></textarea></label>
+      <button class="cta" type="submit">Send message</button>
+      <p style="color:var(--muted);font-size:13px;font-weight:300">Opens your email app with everything prefilled, or write to 2096243628@qq.com directly.</p>
+    </form>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>© 2026 VOLTMORE · Premium tech accessories</div>
+    <div><a href="index.html">Home</a> · <a href="index.html#products">Products</a> · <a href="mailto:2096243628@qq.com">2096243628@qq.com</a></div>
+  </div>
+</footer>
+
+<script>
+function sendMail(ev) {
+  ev.preventDefault();
+  var n = document.getElementById('n').value;
+  var e = document.getElementById('e').value;
+  var t = document.getElementById('t').value;
+  var m = document.getElementById('m').value;
+  var body = encodeURIComponent('Name: ' + n + '\nEmail: ' + e + '\nTopic: ' + t + '\n\n' + m);
+  window.location.href = 'mailto:2096243628@qq.com?subject=' + encodeURIComponent('VOLTMORE inquiry - ' + t) + '&body=' + body;
+  return false;
+}
+</script>
+</body>
+</html>
